@@ -24,6 +24,7 @@
   "ABC_AREA": 0,
 
   "//": "Configuration docs: https://openroad-flow-scripts.readthedocs.io/en/latest/user/FlowVariables.html",
+  "SYNTH_DEFINES": ["TECH_IHP130"],
 
   "//": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
   "//": "!!! DO NOT CHANGE ANYTHING BELOW THIS POINT !!!",

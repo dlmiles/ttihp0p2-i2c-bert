@@ -1,3 +1,7 @@
+# See NOTES.md
+
+[NOTES][NOTES.md]
+
 # Sample testbench for a Tiny Tapeout project
 
 This is a sample testbench for a Tiny Tapeout project. It uses [cocotb](https://docs.cocotb.org/en/stable/) to drive the DUT and check the outputs.
