@@ -1,5 +1,56 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
+# IHP0p2 I2C Bit Error Rate Tester (BERT)<br/>Echo ALU Peripheral
+
+> [!IMPORTANT]
+> My upstream project link maybe a better source of more up to date documentation. \
+> [See also original upstream project](https://github.com/dlmiles/tt05-i2c-bert)
+
+This project contains an updated version since
+[TT05 I2C Bert project link](https://github.com/dlmiles/tt05-i2c-bert).
+
+This IHP130 includes (partial advancement since TT05 but full features due TT09):
+* The SCL pin is still on the old mapping. SCL=uio[2] which does not conform
+with RP2040.  It is possible to bridge with uio[4] maybe via a 10k resistor,
+or if you have full control to remove pull-up/pull-down and disable pin a
+wire can be used to bridge pins.
+* The SDA OE half-cycle glitch between ACKNACK and SEND is removed it is
+thought to cause potential to disrupt SDA line state while SCL is high.
+* Due to IHP130 not having 'Majority Voter 3-input' cell like SKY130 this is
+implemented as module with discrete logic cells.
+* The 'Majority Voter 5-input' was replaced with a proper implementation.
+* STRETCH was improved, but not fully working (as in data load/store after
+stretch is not expected to work, but the SCL state maybe seen).
+* ui[7] now allows MUX of uo[7:0] between 7seg register and accumulator
+register.
+* Configuration latches refactored into latch_config.v to help cleanup code,
+management of feature (so easier to be optional), support different technologies,
+including FPGA.
+* Configuration latches now have 4 delay-gate stages on pairs of bits with
+the ENA rise trigger.
+
+Non features (specific to IHP130 that warrant further understanding):
+* i2c_bert.powerOnSense_GATE does not seem to fire (soon after RST_N
+release) during gatelevel testing, this needs further review to better
+understand.  So the relevant assert in the testbench is disabled search
+IHP130_DISABLED_TEST for those locations.
+* i2c_bert.powerOnSenseCaptured.GATE does fire so that item can be seen
+working.
+* cocotb testbench excludes for IHP130 needs further research.
+* config.json probably did not support SYNTH_DEFINES ["TECH_IHP130"] this
+affects delay-gate change listed above.
+
+Features that did not make IHP0p2 but should be in TT09:
+* Moving SCL pin from uio[2] to uio[4].  This project uses SDA=uio[3] and SCL=uio[2].
+* STRETCH_rd (not fully tested, data read after STRETCH not working)
+* STRETCH_wr (not fully tested, data write after STRETCH not working)
+* SETLEDAC (set 7seg LED with current accumulator register)
+
+While I made progress with building it on FPGA targetting Xilinx Arty-A7
+(see other repository for code changes) to validate against a real RP2040
+I2C hardware controller, this work is not complete.
+So maybe this is I2C like but does not yet conform to specification.
+
 # Tiny Tapeout Verilog Project Template
 
 - [Read the documentation for project](docs/info.md)
